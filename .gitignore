@@ -1,0 +1,8 @@
+*/__init__.py
+*/migrations/
+static/
+/db.sqlite3
+/.venv/
+*/*.iml
+*/*.xml
+/poetry.lock
