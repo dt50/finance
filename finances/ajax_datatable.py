@@ -1,5 +1,6 @@
 from ajax_datatable.views import AjaxDatatableView
 from django.contrib.auth.models import Permission
+
 from .models import Finance, Wallet
 
 
@@ -33,5 +34,6 @@ class PermissionAjaxDatatableView(AjaxDatatableView):
     ]
 
     def get_initial_queryset(self, request=None):
-        queryset = Finance.objects.filter(wallet__customuser__user=request.user)
+        queryset = Finance.objects.filter(
+            wallet__customuser__user=request.user)
         return queryset
