@@ -1,10 +1,12 @@
-from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import SignUpForm
-from .models import CustomUser
+from django.shortcuts import redirect, render
+
 from finances.models import Finance
 from orders.funcs.get_img_site import get_img
+
+from .forms import SignUpForm
+from .models import CustomUser
 
 
 def sign(request):
@@ -54,5 +56,6 @@ def profile(request):
     return render(
         request,
         "users/profile.html",
-        {"info": user_finance, "money": total_money, "money_order": total_money_order},
+        {"info": user_finance, "money": total_money,
+            "money_order": total_money_order},
     )
