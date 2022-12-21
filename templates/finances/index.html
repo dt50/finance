@@ -6,7 +6,6 @@
     <link href="{% static 'ajax_datatable/css/style.css' %}" rel="stylesheet" />
     <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet" />
     <link href="{% static 'finance/table.css' %}" rel="stylesheet" />
-
 {% endblock %}
 
 {% block img %}
@@ -15,7 +14,7 @@
 
 {% block content %}
     <div class="table-responsive _table">
-        <table id="datatable_permissions" class="table table-bordered table-hover">
+        <table id="datatable_permissions" class="table table-bordered table-hover table-striped">
         </table>
     </div>
 {% endblock %}
@@ -30,13 +29,13 @@
         $(document).ready(function() {
             AjaxDatatableViewUtils.initialize_table(
                 $('#datatable_permissions'),
-                "{% url 'ajax_datatable_permissions' %}",
+                "{% url 'finance:ajax_datatable_permissions' %}",
                 {
                     // extra_options (example)
                     processing: false,
                     autoWidth: false,
                     full_row_select: true,
-                    scrollX: false
+                    scrollX: false,
                 }, {
                     // extra_data
                     // ...

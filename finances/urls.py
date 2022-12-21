@@ -3,8 +3,10 @@ from .views import index
 from . import ajax_datatable
 
 
+app_name = 'finance'
+
 urlpatterns = [
-    path("home/", index),
+    path("home/", index, name='index'),
     path(
         "ajax_datatable/permissions/",
         ajax_datatable.PermissionAjaxDatatableView.as_view(),
