@@ -33,8 +33,16 @@
                 </div>
             </div>
 
-            <div class="recent-border mt-4">
-                <span class="recent-orders">Recent orders</span>
+            <div class="order">
+                <div class="recent-border mt-4">
+                    <span class="recent-orders">Recent orders - {{ money_order }}</span><br>
+                </div>
+
+                <ul>
+                    {% for order in info.orders.all %}
+                        <li><img src=""><a href="{{ order.url }}">{{ order.name }}</a> - {{ order.price }}</li>
+                    {% endfor %}
+                </ul>
             </div>
 
             <div class="wishlist-border pt-2">

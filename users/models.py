@@ -1,12 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 from finances.models import Wallet
+from orders.models import Orders
 
 
 class CustomUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     wallet = models.ForeignKey(Wallet, on_delete=models.RESTRICT)
     avatar = models.ImageField(upload_to="avatar/", null=True, blank=True)
+    orders = models.ManyToManyField(Orders)
 
     class Meta:
         verbose_name = "Пользователя"
