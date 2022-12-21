@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from finances.models import Wallet
-from orders.models import Orders
+from orders.models import Orders, Wishlist
 
 
 class CustomUser(models.Model):
@@ -9,6 +9,7 @@ class CustomUser(models.Model):
     wallet = models.ForeignKey(Wallet, on_delete=models.RESTRICT)
     avatar = models.ImageField(upload_to="avatar/", null=True, blank=True)
     orders = models.ManyToManyField(Orders)
+    wishlists = models.ManyToManyField(Wishlist)
 
     class Meta:
         verbose_name = "Пользователя"

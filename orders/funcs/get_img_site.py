@@ -12,5 +12,4 @@ def get_img(url):
         soup = BeautifulSoup(page.text, "html.parser")
         imgs = soup.findAll("img")
 
-        for img in imgs:
-            print(img["src"])
+        print(imgs)
