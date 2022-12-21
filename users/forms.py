@@ -1,8 +1,10 @@
-from django_select2.forms import ModelSelect2Widget
-from django.forms import forms
-from .models import CustomUser
 from django.contrib.auth.models import User
+from django.forms import forms
+from django_select2.forms import ModelSelect2Widget
+
 from finances.models import Wallet
+
+from .models import CustomUser
 
 
 class ProcessForm(forms.ModelForm):

@@ -1,7 +1,7 @@
-from django.urls import path, include
-from .views import index
-from . import ajax_datatable
+from django.urls import include, path
 
+from . import ajax_datatable
+from .views import index
 
 urlpatterns = [
     path("home/", index),
