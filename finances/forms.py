@@ -1,5 +1,6 @@
 from django import forms
-from .models import Wallet, Finance
+
+from .models import Finance, Wallet
 
 
 class FinanceForm(forms.ModelForm):
