@@ -1,12 +1,12 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, logout
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-from .forms import SignUpForm
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.shortcuts import redirect, render
 
-from .models import CustomUser
 from finances.models import Finance, Wallet
+
+from .forms import SignUpForm
+from .models import CustomUser
 
 
 def sign(request):
