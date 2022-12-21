@@ -6,3 +6,4 @@ static/
 */*.iml
 */*.xml
 /poetry.lock
+/media/avatar/*

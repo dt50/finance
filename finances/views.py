@@ -1,3 +1,7 @@
 from django.shortcuts import render
+from users.models import CustomUser
 
-# Create your views here.
+
+def index(requests):
+    photo = CustomUser.objects.get(user=requests.user)
+    return render(requests, "finances/index.html", {"url_photo": photo.avatar.url})

@@ -12,4 +12,4 @@ class WalletAdmin(admin.ModelAdmin):
 
 @admin.register(Finance)
 class FinanceAdmin(admin.ModelAdmin):
-    pass
+    list_display = ["budget", "currency"]

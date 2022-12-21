@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block style %}
+    <link href="{% static 'ajax_datatable/css/style.css' %}" rel="stylesheet" />
+    <link href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />
+{% endblock %}
+
+{% block img %}
+    {{ url_photo }}
+{% endblock %}
+
+{% block content %}
+    <div class="table-responsive">
+        <table id="datatable_permissions" width="100%" class="table table-striped table-bordered dt-responsive compact nowrap">
+        </table>
+    </div>
+{% endblock %}
+
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'ajax_datatable/js/utils.js' %}"></script>
+    <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+    <script>
+
+        $(document).ready(function() {
+            AjaxDatatableViewUtils.initialize_table(
+                $('#datatable_permissions'),
+                "{% url 'ajax_datatable_permissions' %}",
+                {
+                    // extra_options (example)
+                    processing: false,
+                    autoWidth: false,
+                    full_row_select: true,
+                    scrollX: false
+                }, {
+                    // extra_data
+                    // ...
+                },
+            );
+        });
+
+    </script>
+
+{% endblock %}
