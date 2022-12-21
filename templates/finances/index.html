@@ -13,10 +13,42 @@
 {% endblock %}
 
 {% block content %}
+
     <div class="table-responsive _table">
         <table id="datatable_permissions" class="table table-bordered table-hover table-striped">
         </table>
     </div>
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add finance</button>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">New finances</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form class="contactForm">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Budget:</label>
+                {{ form.budget }}
+              </div>
+              <div class="mb-3">
+                <label for="message-text" class="col-form-label">Currency:</label>
+                {{ form.currency }}
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary submit">Create</button>
+          </div>
+        </div>
+      </div>
+</div>
+
 {% endblock %}
 
 
@@ -41,6 +73,37 @@
                     // ...
                 },
             );
+
+        });
+
+        const exampleModal = document.getElementById('exampleModal')
+        exampleModal.addEventListener('show.bs.modal', event => {
+          const button = event.relatedTarget
+          const modalTitle = exampleModal.querySelector('.modal-title')
+          const modalBodyInput = exampleModal.querySelector('.modal-body input')
+          modalTitle.textContent = 'Add new finance info'
+        });
+
+        $(".contactForm").submit(function(e){
+            e.preventDefault();
+            var serializedData = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url :  "{% url 'finance:append_finance' %}",
+                data : serializedData,
+                success : function(response){
+                    window.location.reload();
+                },
+                error : function(response){
+                    console.log(response)
+                }
+            });
+        });
+
+        const button = document.querySelector(".submit");
+
+        button.addEventListener("click", () => {
+            $(".contactForm").submit()
         });
 
     </script>

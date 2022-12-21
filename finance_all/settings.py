@@ -39,11 +39,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
-    # "aldjemy",
     "users.apps.UsersConfig",
     "finances",
-    "ajax_datatable",
     "orders",
+    # "aldjemy",
+    "ajax_datatable",
+    "django_ajax",
 ]
 
 MIDDLEWARE = [
