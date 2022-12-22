@@ -1,8 +1,8 @@
 from django import forms
-from .models import Wallet, Finance
+from .models import Finance
 
 
 class FinanceForm(forms.ModelForm):
     class Meta:
         model = Finance
-        fields = ["budget", "currency"]
+        fields = ["name", "budget", "currency", "type"]

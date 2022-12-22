@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # "aldjemy",
     "ajax_datatable",
     "django_ajax",
+    "sortedm2m",
 ]
 
 MIDDLEWARE = [

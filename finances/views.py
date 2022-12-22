@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from users.models import CustomUser
 from django.contrib.auth.decorators import login_required
-from finances.models import Finance, Wallet
+from finances.models import Wallet
 from .forms import FinanceForm
 from django_ajax.decorators import ajax
 from django.http import JsonResponse
@@ -27,6 +27,8 @@ def ajax_create_finance(request):
     if request.method == "POST" and is_ajax(request):
         form = FinanceForm(request.POST)
         finance = form.save(commit=False)
+        if finance.budget < 0:
+            finance.type_inout = 2
         finance.save()
         wallet = Wallet.objects.filter(customuser__user=request.user)[0]
         wallet.finance.add(finance)

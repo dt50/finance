@@ -15,13 +15,15 @@
 {% block content %}
 
     <div class="table-responsive _table">
-        <table id="datatable_permissions" class="table table-bordered table-hover table-striped">
+        <table id="datatable" class="table table-bordered table-hover table-striped">
         </table>
     </div>
 
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add finance</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#FinanceModal">Add finance</button>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+</div>
+
+    <div class="modal fade" id="FinanceModal" tabindex="-1" aria-labelledby="FinanceModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -32,35 +34,41 @@
             <form class="contactForm">
               {% csrf_token %}
               <div class="mb-3">
-                <label for="recipient-name" class="col-form-label">Budget:</label>
+                <label for="recipient-name" class="col-form-label">Name:</label><br>
+                {{ form.name }}
+              </div>
+              <div class="mb-3">
+                <label for="recipient-name" class="col-form-label">Budget:</label><br>
                 {{ form.budget }}
               </div>
               <div class="mb-3">
-                <label for="message-text" class="col-form-label">Currency:</label>
+                <label for="message-text" class="col-form-label">Currency:</label><br>
                 {{ form.currency }}
+              </div>
+              <div class="mb-3">
+                <label for="message-text" class="col-form-label">Type:</label><br>
+                {{ form.type }}
               </div>
             </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary submit">Create</button>
+            <button type="button" class="btn btn-primary submit" data-bs-dismiss="modal">Create</button>
           </div>
         </div>
       </div>
-</div>
-
 {% endblock %}
 
 
 {% block script %}
     <script type="text/javascript" src="{% static 'ajax_datatable/js/utils.js' %}"></script>
-    <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 
     <script>
 
         $(document).ready(function() {
             AjaxDatatableViewUtils.initialize_table(
-                $('#datatable_permissions'),
+                $('#datatable'),
                 "{% url 'finance:ajax_datatable_permissions' %}",
                 {
                     // extra_options (example)
@@ -76,11 +84,11 @@
 
         });
 
-        const exampleModal = document.getElementById('exampleModal')
-        exampleModal.addEventListener('show.bs.modal', event => {
+        const FinanceModal = document.getElementById('FinanceModal')
+        FinanceModal.addEventListener('show.bs.modal', event => {
           const button = event.relatedTarget
-          const modalTitle = exampleModal.querySelector('.modal-title')
-          const modalBodyInput = exampleModal.querySelector('.modal-body input')
+          const modalTitle = FinanceModal.querySelector('.modal-title')
+          const modalBodyInput = FinanceModal.querySelector('.modal-body input')
           modalTitle.textContent = 'Add new finance info'
         });
 
@@ -92,7 +100,9 @@
                 url :  "{% url 'finance:append_finance' %}",
                 data : serializedData,
                 success : function(response){
-                    window.location.reload();
+                    $.fn.dataTable.tables({
+                        api: true
+                    }).draw();
                 },
                 error : function(response){
                     console.log(response)
@@ -105,6 +115,32 @@
         button.addEventListener("click", () => {
             $(".contactForm").submit()
         });
+
+        $('#datatable').on('draw.dt', function(event) {
+            onTableDraw(event);
+        });
+
+        var onTableDraw = function (event) {
+            var html_table = $(event.target);
+            html_table.find('tr').each(function(index, item) {
+
+                try {
+                    var row = $(item);
+                    text = row.children('td.type_inout').first().text();
+                    budget = row.children('td.budget').first().text();
+
+                    if (text == 'Зачисление') {
+                        row.css('background-color', '#7fde77');
+                    }
+                    else if (text == 'Трата') {
+                        row.css('background-color', '#ffa4a4');
+                    }
+                }
+                    catch(err) {
+                }
+
+            });
+        }
 
     </script>
 
