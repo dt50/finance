@@ -4,7 +4,7 @@ from django.db import models
 class Orders(models.Model):
     class State(models.TextChoices):
         TO_BUY = "1", "К покупке"
-        BOUGHT = "2", "Купленно"
+        BOUGHT = "2", "Куплено"
         SCHEDULED = "3", "Запланировано"
         ABADONED = "4", "Заброшено"
 

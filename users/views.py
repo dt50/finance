@@ -6,6 +6,7 @@ from .models import CustomUser
 from finances.models import Finance
 from orders.funcs.get_img_site import get_img
 from orders.funcs.get_currency import get_currency
+from django.db.models import Q
 
 
 def sign(request):
@@ -54,7 +55,7 @@ def profile(request):
             total_money += finance.budget
 
     total_money_order = 0
-    for order in user_finance.orders.all():
+    for order in user_finance.orders.filter(~Q(state__in=["2", "4"])):
         if order.currency == "2":
             total_money_order += order.price * float(currency["USD"]["Value"])
         elif order.currency == "3":
@@ -64,7 +65,7 @@ def profile(request):
         get_img(order.url)
 
     total_money_wishlist = 0
-    for wishlist in user_finance.wishlists.all():
+    for wishlist in user_finance.wishlists.filter(~Q(state="2")):
         if wishlist.currency == "2":
             total_money_wishlist += wishlist.price * float(currency["USD"]["Value"])
         elif wishlist.currency == "3":

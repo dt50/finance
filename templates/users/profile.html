@@ -34,27 +34,32 @@
             </div>
 
             <div class="order">
-                <div class="recent-border mt-4">
-                    <span class="recent-orders">Recent orders - {{ money_order }} <i class="fa fa-rub"></i></span><br>
-                </div>
 
-                <ul>
+                <div class="dropdown">
+                  <div class="recent-border mt-4">
+                      <span class="recent-orders">Recent orders - {{ money_order }} <i class="fa fa-rub"></i></span><br>
+                  </div>
+                  <div class="dropdown-options">
                     {% for order in info.orders.all %}
-                        <li><img src=""><a href="{{ order.url }}">{{ order.name }}</a> - {{ order.price }} {% if order.currency == '1' %}<i class="fa fa-rub"></i>{% elif order.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</li>
+                        {% if order.state == '2' %}
+                            <a href="{{ order.url }}">{{ order.name }} - {{ order.price }} {% if order.currency == '1' %}<i class="fa fa-rub"></i>{% elif order.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</a>
+                        {% endif %}
                     {% endfor %}
-                </ul>
+                  </div>
+                </div>
             </div>
 
             <div class="wishlist">
-                <div class="wishlist-border pt-2">
-                    <span class="wishlist">Wishlist - {{ money_wishlist }} <i class="fa fa-rub"></i></span>
+                <div class="dropdown">
+                    <div class="wishlist-border pt-2">
+                        <span class="wishlist">Wishlist - {{ money_wishlist }} <i class="fa fa-rub"></i></span>
+                    </div>
+                    <div class="dropdown-options">
+                        {% for wishlist in info.wishlists.all %}
+                            <a href="{{ wishlist.url }}">{{ wishlist.name }} - {{ wishlist.price }} {% if wishlist.currency == '1' %}<i class="fa fa-rub"></i>{% elif wishlist.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</a>
+                        {% endfor %}
+                    </div>
                 </div>
-
-                <ul>
-                    {% for wishlist in info.wishlists.all %}
-                        <li><img src=""><a href="{{ wishlist.url }}">{{ wishlist.name }}</a> - {{ wishlist.price }} {% if wishlist.currency == '1' %}<i class="fa fa-rub"></i>{% elif wishlist.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</li>
-                    {% endfor %}
-                </ul>
             </div>
         </div>
 
