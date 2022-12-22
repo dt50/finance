@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import index, ajax_create_order
-from . import ajax_datatable
 
+from . import ajax_datatable
+from .views import ajax_create_order, index
 
 app_name = "orders"
 
