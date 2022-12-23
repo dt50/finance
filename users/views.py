@@ -10,7 +10,7 @@ from orders.funcs.get_img_site import get_img
 from orders.funcs.get_currency import get_currency
 from django.db.models import Q
 from django.core import serializers
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django_ajax.decorators import ajax
 
 
@@ -134,4 +134,26 @@ def ajax_update_wish(request, id):
         instance = Wishlist.objects.get(id=id)
         form = WishlistForm(request.POST, instance=instance)
         form.save()
+        return JsonResponse({"state": "OK"}, status=200)
+
+
+@ajax
+def ajax_create_order(request):
+    if request.method == "POST" and is_ajax(request):
+        form = OrderForm(request.POST)
+        order = form.save(commit=False)
+        order.save()
+        user = CustomUser.objects.get(user=request.user)
+        user.orders.add(order)
+        return JsonResponse({"state": "OK"}, status=200)
+
+
+@ajax
+def ajax_create_wish(request):
+    if request.method == "POST" and is_ajax(request):
+        form = WishlistForm(request.POST)
+        wish = form.save(commit=False)
+        wish.save()
+        user = CustomUser.objects.get(user=request.user)
+        user.wishlists.add(wish)
         return JsonResponse({"state": "OK"}, status=200)

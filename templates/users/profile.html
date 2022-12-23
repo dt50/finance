@@ -4,6 +4,7 @@
 {% block style %}
     <link href="{% static 'users/profile.css' %}" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet" />
+
 {% endblock %}
 
 {% block img %}
@@ -39,10 +40,13 @@
                 <div class="dropdown">
                   <div class="recent-border mt-4">
                       <span class="recent-orders">Recent orders - {{ money_order }} <i class="fa fa-rub"></i></span><br>
+                      <button type="button" class="btn-modal" data-bs-toggle="modal" data-bs-target="#OrderModal">
+                          <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                      </button>
                   </div>
                   <div class="dropdown-options">
                     {% for order in info.orders.all %}
-                        {% if order.state == '2' %}
+                        {% if order.state != '2' %}
                             <button type="button" data-bs-toggle="modal" data-bs-target="#OrderModal" data-bs-id="{{ order.id }}" data-bs-name="{{ order.name }}">{{ order.name }} - {{ order.price }} {% if order.currency == '1' %}<i class="fa fa-rub"></i>{% elif order.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</button>
                         {% endif %}
                     {% endfor %}
@@ -54,6 +58,9 @@
                 <div class="dropdown">
                     <div class="wishlist-border pt-2">
                         <span class="wishlist">Wishlist - {{ money_wishlist }} <i class="fa fa-rub"></i></span>
+                        <button type="button" class="btn-modal" data-bs-toggle="modal" data-bs-target="#WishlistModal">
+                            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                        </button>
                     </div>
                     <div class="dropdown-options">
                         {% for wishlist in info.wishlists.all %}
@@ -70,7 +77,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">New finances</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">New Order</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -114,7 +121,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">New finances</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">New Wish</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -153,6 +160,7 @@
 {% endblock %}
 
 {% block script %}
+    <script src="https://use.fontawesome.com/88a67b7ff4.js"></script>
     <script>
         const OrderModal = document.getElementById('OrderModal')
             OrderModal.addEventListener('show.bs.modal', event => {
@@ -161,24 +169,26 @@
               const modalBodyInput = OrderModal.querySelector('.modal-body input')
               const name = button.getAttribute('data-bs-name')
               const id = button.getAttribute('data-bs-id')
-
-              $.ajax({
-                    type: "GET",
-                    url: "{% url 'users:ajax_order' %}",
-                    data: {'id': id},
-                    success: function(data, status) {
-                        data = data[0].fields
-                        $('#OrderModal').find('#id_order_').val(id);
-                        $('#OrderModal').find('#id_state').val(data.state);
-                        $('#OrderModal').find('#id_name').val(data.name);
-                        $('#OrderModal').find('#id_url').val(data.url);
-                        $('#OrderModal').find('#id_price').val(data.price);
-                        $('#OrderModal').find('#id_currency').val(data.currency);
-                        $('#OrderModal').find('#id_date_buy').val(data.date_buy);
-                    }
-                });
-              modalTitle.textContent = `Order of ${name} with id ${id}`
-              modalBodyInput.value = name
+              console.log(id);
+              if (id) {
+                  $.ajax({
+                      type: "GET",
+                      url: "{% url 'users:ajax_order' %}",
+                      data: {'id': id},
+                      success: function (data, status) {
+                          data = data[0].fields
+                          $('#OrderModal').find('#id_order_').val(id);
+                          $('#OrderModal').find('#id_state').val(data.state);
+                          $('#OrderModal').find('#id_name').val(data.name);
+                          $('#OrderModal').find('#id_url').val(data.url);
+                          $('#OrderModal').find('#id_price').val(data.price);
+                          $('#OrderModal').find('#id_currency').val(data.currency);
+                          $('#OrderModal').find('#id_date_buy').val(data.date_buy);
+                      }
+                  });
+                  modalTitle.textContent = `Order of ${name} with id ${id}`;
+                  modalBodyInput.value = name;
+              }
             });
 
         const WishlistModal = document.getElementById('WishlistModal')
@@ -189,63 +199,65 @@
               const name = button.getAttribute('data-bs-name')
               const id = button.getAttribute('data-bs-id')
 
-              $.ajax({
-                    type: "GET",
-                    url: "{% url 'users:ajax_wishlist' %}",
-                    data: {'id': id},
-                    success: function(data, status) {
-                        data = data[0].fields
-                        $('#WishlistModal').find('#id_wish_').val(id);
-                        $('#WishlistModal').find('#id_state').val(data.state);
-                        $('#WishlistModal').find('#id_name').val(data.name);
-                        $('#WishlistModal').find('#id_url').val(data.url);
-                        $('#WishlistModal').find('#id_price').val(data.price);
-                        $('#WishlistModal').find('#id_currency').val(data.currency);
-                    }
-                });
-
-              modalTitle.textContent = `Wishlist of ${name} with id ${id}`
-              modalBodyInput.value = name
+              if (id) {
+                  $.ajax({
+                      type: "GET",
+                      url: "{% url 'users:ajax_wishlist' %}",
+                      data: {'id': id},
+                      success: function (data, status) {
+                          data = data[0].fields
+                          $('#WishlistModal').find('#id_wish_').val(id);
+                          $('#WishlistModal').find('#id_state').val(data.state);
+                          $('#WishlistModal').find('#id_name').val(data.name);
+                          $('#WishlistModal').find('#id_url').val(data.url);
+                          $('#WishlistModal').find('#id_price').val(data.price);
+                          $('#WishlistModal').find('#id_currency').val(data.currency);
+                      }
+                  });
+                  modalTitle.textContent = `Wishlist of ${name} with id ${id}`
+                  modalBodyInput.value = name
+              }
             });
-
-        $('.contactFormOrder').on('submit', function() {
-        $.ajax({
-            type: $(this).attr('method'),
-            url: this.action,
-            data: $(this).serialize(),
-            context: this,
-            success: function(data, status) {
-                $('#contactFormOrder').html(data);
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                alert('Entry doesnt found in database');
-            }
-            });
-            return false;
-        });
 
 
         $('#OrderModal').find('.submit').on('click', () => {
-            $(".contactFormWish").submit()
+            $(".contactFormOrder").submit()
         });
 
         $(".contactFormOrder").submit(function(e){
             var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
             e.preventDefault();
-            var id = $('#OrderModal').find('#id_state').val();
-            var serializedData = $(this).serialize();
-            $.ajax({
-                type: 'POST',
-                url :  `/users/ajax_update_order/${id}`,
-                headers: {"X-CSRFToken": crf_token},
-                data : serializedData,
-                success : function(response, date){
-                    window.location.reload();
-                },
-                error : function(response){
-                    console.log(response)
-                }
-            });
+            var id = $('#OrderModal').find('#id_order_').val();
+            console.log(id);
+            if (id) {
+                var serializedData = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: `/users/ajax_update_order/${id}`,
+                    headers: {"X-CSRFToken": crf_token},
+                    data: serializedData,
+                    success: function (response, date) {
+                        window.location.reload();
+                    },
+                    error: function (response) {
+                        console.log(response)
+                    }
+                });
+            } else {
+                var serializedData = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: `/users/ajax_create_order/`,
+                    headers: {"X-CSRFToken": crf_token},
+                    data: serializedData,
+                    success: function (response, date) {
+                        window.location.reload()
+                    },
+                    error: function (response) {
+                        console.log(response)
+                    }
+                });
+            }
         });
 
 
@@ -253,24 +265,39 @@
             $(".contactFormWish").submit()
         });
 
-
         $(".contactFormWish").submit(function(e){
             var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
             e.preventDefault();
-            var id = $('#WishlistModal').find('#id_state').val();
-            var serializedData = $(this).serialize();
-            $.ajax({
-                type: 'POST',
-                url :  `/users/ajax_update_wish/${id}`,
-                headers: {"X-CSRFToken": crf_token},
-                data : serializedData,
-                success : function(response, date){
-                    window.location.reload();
-                },
-                error : function(response){
-                    console.log(response)
-                }
-            });
+            var id = $('#WishlistModal').find('#id_wish_').val();
+            if (id) {
+                var serializedData = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: `/users/ajax_update_wish/${id}`,
+                    headers: {"X-CSRFToken": crf_token},
+                    data: serializedData,
+                    success: function (response, date) {
+                        window.location.reload();
+                    },
+                    error: function (response) {
+                        console.log(response)
+                    }
+                });
+            } else {
+                var serializedData = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: `/users/ajax_create_wish/`,
+                    headers: {"X-CSRFToken": crf_token},
+                    data: serializedData,
+                    success: function (response, date) {
+                        window.location.reload()
+                    },
+                    error: function (response) {
+                        console.log(response)
+                    }
+                });
+            }
         });
 
 

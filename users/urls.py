@@ -9,6 +9,8 @@ from .views import (
     ajax_get_wishlist,
     ajax_update_order,
     ajax_update_wish,
+    ajax_create_order,
+    ajax_create_wish,
 )
 
 
@@ -24,4 +26,6 @@ urlpatterns = [
     path("ajax_wishlist/", ajax_get_wishlist, name="ajax_wishlist"),
     path("ajax_update_order/<int:id>", ajax_update_order, name="ajax_update_order"),
     path("ajax_update_wish/<int:id>", ajax_update_wish, name="ajax_update_wish"),
+    path("ajax_create_order/", ajax_create_order, name="ajax_create_order"),
+    path("ajax_create_wish/", ajax_create_wish, name="ajax_create_wish"),
 ]
