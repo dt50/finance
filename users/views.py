@@ -1,17 +1,19 @@
-from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.core import serializers
+from django.db.models import Q
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
+from django_ajax.decorators import ajax
+
+from finances.models import Finance
+from orders.forms import OrderForm, WishlistForm
+from orders.funcs.get_currency import get_currency
+from orders.funcs.get_img_site import get_img
+from orders.models import Orders, Wishlist
+
 from .forms import SignUpForm
 from .models import CustomUser
-from finances.models import Finance
-from orders.models import Orders, Wishlist
-from orders.forms import OrderForm, WishlistForm
-from orders.funcs.get_img_site import get_img
-from orders.funcs.get_currency import get_currency
-from django.db.models import Q
-from django.core import serializers
-from django.http import JsonResponse, HttpResponse
-from django_ajax.decorators import ajax
 
 
 def is_ajax(request):
@@ -78,9 +80,11 @@ def profile(request):
     total_money_wishlist = 0
     for wishlist in user_finance.wishlists.filter(~Q(state="2")):
         if wishlist.currency == "2":
-            total_money_wishlist += wishlist.price * float(currency["USD"]["Value"])
+            total_money_wishlist += wishlist.price * \
+                float(currency["USD"]["Value"])
         elif wishlist.currency == "3":
-            total_money_wishlist += wishlist.price * float(currency["EUR"]["Value"])
+            total_money_wishlist += wishlist.price * \
+                float(currency["EUR"]["Value"])
         else:
             total_money_wishlist += wishlist.price
         get_img(wishlist.url)
