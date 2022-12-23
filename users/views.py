@@ -4,9 +4,18 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import SignUpForm
 from .models import CustomUser
 from finances.models import Finance
+from orders.models import Orders, Wishlist
+from orders.forms import OrderForm, WishlistForm
 from orders.funcs.get_img_site import get_img
 from orders.funcs.get_currency import get_currency
 from django.db.models import Q
+from django.core import serializers
+from django.http import JsonResponse, HttpResponse
+from django_ajax.decorators import ajax
+
+
+def is_ajax(request):
+    return request.headers.get("x-requested-with") == "XMLHttpRequest"
 
 
 def sign(request):
@@ -44,6 +53,8 @@ def sign_out(request):
 def profile(request):
     user_finance = CustomUser.objects.get(user=request.user)
     finances = Finance.objects.filter(wallet__customuser__user=request.user)
+    order_form = OrderForm()
+    wishlist_form = WishlistForm()
     total_money = 0
     currency = get_currency()
     for finance in finances:
@@ -79,8 +90,48 @@ def profile(request):
         "users/profile.html",
         {
             "info": user_finance,
+            "order_form": order_form,
+            "wishlist_form": wishlist_form,
             "money": round(total_money, 3),
             "money_order": round(total_money_order, 3),
             "money_wishlist": round(total_money_wishlist, 3),
         },
     )
+
+
+def ajax_get_order(request):
+    id = request.GET.get("id")
+    try:
+        order = Orders.objects.get(id=id)
+    except Orders.DoesNotExist:
+        return JsonResponse(data={"status": "error"}, status=400)
+    serialized_obj = serializers.serialize("python", [order])
+    return JsonResponse(data=serialized_obj, safe=False)
+
+
+def ajax_get_wishlist(request):
+    id = request.GET.get("id")
+    try:
+        wishlist = Wishlist.objects.get(id=id)
+    except Wishlist.DoesNotExist:
+        return JsonResponse(data={"status": "error"}, status=400)
+    serialized_obj = serializers.serialize("python", [wishlist])
+    return JsonResponse(data=serialized_obj, safe=False)
+
+
+@ajax
+def ajax_update_order(request, id):
+    if request.method == "POST" and is_ajax(request):
+        instance = Orders.objects.get(id=id)
+        form = OrderForm(request.POST, instance=instance)
+        form.save()
+        return JsonResponse({"state": "OK"}, status=200)
+
+
+@ajax
+def ajax_update_wish(request, id):
+    if request.method == "POST" and is_ajax(request):
+        instance = Wishlist.objects.get(id=id)
+        form = WishlistForm(request.POST, instance=instance)
+        form.save()
+        return JsonResponse({"state": "OK"}, status=200)

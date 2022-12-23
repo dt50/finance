@@ -11,6 +11,7 @@
 {% endblock %}
 
 {% block content %}
+    {% csrf_token %}
     <div class="container d-flex justify-content-center mt-5">
         <div class="card">
 
@@ -42,7 +43,7 @@
                   <div class="dropdown-options">
                     {% for order in info.orders.all %}
                         {% if order.state == '2' %}
-                            <a href="{{ order.url }}">{{ order.name }} - {{ order.price }} {% if order.currency == '1' %}<i class="fa fa-rub"></i>{% elif order.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</a>
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#OrderModal" data-bs-id="{{ order.id }}" data-bs-name="{{ order.name }}">{{ order.name }} - {{ order.price }} {% if order.currency == '1' %}<i class="fa fa-rub"></i>{% elif order.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</button>
                         {% endif %}
                     {% endfor %}
                   </div>
@@ -56,7 +57,7 @@
                     </div>
                     <div class="dropdown-options">
                         {% for wishlist in info.wishlists.all %}
-                            <a href="{{ wishlist.url }}">{{ wishlist.name }} - {{ wishlist.price }} {% if wishlist.currency == '1' %}<i class="fa fa-rub"></i>{% elif wishlist.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</a>
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#WishlistModal" data-bs-id="{{ wishlist.id }}" data-bs-name="{{ wishlist.name }}">{{ wishlist.name }} - {{ wishlist.price }} {% if wishlist.currency == '1' %}<i class="fa fa-rub"></i>{% elif wishlist.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</button>
                         {% endfor %}
                     </div>
                 </div>
@@ -64,8 +65,214 @@
         </div>
 
     </div>
+
+    <div class="modal fade" id="OrderModal" tabindex="-1" aria-labelledby="OrderModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">New finances</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form class="contactFormOrder">
+                <input id="id_order_" type="hidden">
+                <div class="mb-3">
+                    <label for="message-text" class="col-form-label">State:</label><br>
+                    {{ order_form.state }}
+                </div>
+                <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Name:</label><br>
+                    {{ order_form.name }}
+                </div>
+                <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Url:</label><br>
+                    {{ order_form.url }}
+                </div>
+                <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Price:</label><br>
+                    {{ order_form.price }}
+                </div>
+                <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Currency:</label><br>
+                    {{ order_form.currency }}
+                </div>
+                <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Date buy:</label><br>
+                    {{ order_form.date_buy }}
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary submit" data-bs-dismiss="modal">Create</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="WishlistModal" tabindex="-1" aria-labelledby="WishlistModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">New finances</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form class="contactFormWish">
+                <input id="id_wish_" type="hidden">
+                <div class="mb-3">
+                    <label for="message-text" class="col-form-label">State:</label><br>
+                    {{ wishlist_form.state }}
+                </div>
+                <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Name:</label><br>
+                    {{ wishlist_form.name }}
+                </div>
+                <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Url:</label><br>
+                    {{ wishlist_form.url }}
+                </div>
+                <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Price:</label><br>
+                    {{ wishlist_form.price }}
+                </div>
+                <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Currency:</label><br>
+                    {{ wishlist_form.currency }}
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary submit" data-bs-dismiss="modal">Create</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 {% endblock %}
 
 {% block script %}
+    <script>
+        const OrderModal = document.getElementById('OrderModal')
+            OrderModal.addEventListener('show.bs.modal', event => {
+              const button = event.relatedTarget
+              const modalTitle = OrderModal.querySelector('.modal-title')
+              const modalBodyInput = OrderModal.querySelector('.modal-body input')
+              const name = button.getAttribute('data-bs-name')
+              const id = button.getAttribute('data-bs-id')
 
+              $.ajax({
+                    type: "GET",
+                    url: "{% url 'users:ajax_order' %}",
+                    data: {'id': id},
+                    success: function(data, status) {
+                        data = data[0].fields
+                        $('#OrderModal').find('#id_order_').val(id);
+                        $('#OrderModal').find('#id_state').val(data.state);
+                        $('#OrderModal').find('#id_name').val(data.name);
+                        $('#OrderModal').find('#id_url').val(data.url);
+                        $('#OrderModal').find('#id_price').val(data.price);
+                        $('#OrderModal').find('#id_currency').val(data.currency);
+                        $('#OrderModal').find('#id_date_buy').val(data.date_buy);
+                    }
+                });
+              modalTitle.textContent = `Order of ${name} with id ${id}`
+              modalBodyInput.value = name
+            });
+
+        const WishlistModal = document.getElementById('WishlistModal')
+            WishlistModal.addEventListener('show.bs.modal', event => {
+              const button = event.relatedTarget
+              const modalTitle = WishlistModal.querySelector('.modal-title')
+              const modalBodyInput = WishlistModal.querySelector('.modal-body input')
+              const name = button.getAttribute('data-bs-name')
+              const id = button.getAttribute('data-bs-id')
+
+              $.ajax({
+                    type: "GET",
+                    url: "{% url 'users:ajax_wishlist' %}",
+                    data: {'id': id},
+                    success: function(data, status) {
+                        data = data[0].fields
+                        $('#WishlistModal').find('#id_wish_').val(id);
+                        $('#WishlistModal').find('#id_state').val(data.state);
+                        $('#WishlistModal').find('#id_name').val(data.name);
+                        $('#WishlistModal').find('#id_url').val(data.url);
+                        $('#WishlistModal').find('#id_price').val(data.price);
+                        $('#WishlistModal').find('#id_currency').val(data.currency);
+                    }
+                });
+
+              modalTitle.textContent = `Wishlist of ${name} with id ${id}`
+              modalBodyInput.value = name
+            });
+
+        $('.contactFormOrder').on('submit', function() {
+        $.ajax({
+            type: $(this).attr('method'),
+            url: this.action,
+            data: $(this).serialize(),
+            context: this,
+            success: function(data, status) {
+                $('#contactFormOrder').html(data);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert('Entry doesnt found in database');
+            }
+            });
+            return false;
+        });
+
+
+        $('#OrderModal').find('.submit').on('click', () => {
+            $(".contactFormWish").submit()
+        });
+
+        $(".contactFormOrder").submit(function(e){
+            var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+            e.preventDefault();
+            var id = $('#OrderModal').find('#id_state').val();
+            var serializedData = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url :  `/users/ajax_update_order/${id}`,
+                headers: {"X-CSRFToken": crf_token},
+                data : serializedData,
+                success : function(response, date){
+                    window.location.reload();
+                },
+                error : function(response){
+                    console.log(response)
+                }
+            });
+        });
+
+
+        $('#WishlistModal').find('.submit').on('click', () => {
+            $(".contactFormWish").submit()
+        });
+
+
+        $(".contactFormWish").submit(function(e){
+            var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+            e.preventDefault();
+            var id = $('#WishlistModal').find('#id_state').val();
+            var serializedData = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url :  `/users/ajax_update_wish/${id}`,
+                headers: {"X-CSRFToken": crf_token},
+                data : serializedData,
+                success : function(response, date){
+                    window.location.reload();
+                },
+                error : function(response){
+                    console.log(response)
+                }
+            });
+        });
+
+
+    </script>
 {% endblock %}

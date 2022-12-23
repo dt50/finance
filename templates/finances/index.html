@@ -92,6 +92,12 @@
           modalTitle.textContent = 'Add new finance info'
         });
 
+
+        const button = document.querySelector(".submit");
+        button.addEventListener("click", () => {
+            $(".contactForm").submit()
+        });
+
         $(".contactForm").submit(function(e){
             e.preventDefault();
             var serializedData = $(this).serialize();
@@ -110,11 +116,6 @@
             });
         });
 
-        const button = document.querySelector(".submit");
-
-        button.addEventListener("click", () => {
-            $(".contactForm").submit()
-        });
 
         $('#datatable').on('draw.dt', function(event) {
             onTableDraw(event);
