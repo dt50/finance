@@ -44,7 +44,8 @@ class Wishlist(models.Model):
         USD = "2", "Доллар"
         EUR = "3", "Евро"
 
-    state = models.CharField(max_length=2, choices=State.choices, default=State.PLAN)
+    state = models.CharField(
+        max_length=2, choices=State.choices, default=State.PLAN)
 
     name = models.CharField(max_length=500)
     url = models.URLField(blank=True, null=True)

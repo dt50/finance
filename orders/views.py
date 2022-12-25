@@ -1,10 +1,12 @@
+from django.http import JsonResponse
 from django.shortcuts import render
+from django_ajax.decorators import ajax
+
+from finances.models import Finance, TypeFinance
 from users.models import CustomUser
+
 from .forms import OrderForm
 from .models import Orders
-from finances.models import Finance, TypeFinance
-from django_ajax.decorators import ajax
-from django.http import JsonResponse
 
 
 def is_ajax(request):

@@ -1,7 +1,7 @@
-from django.urls import path, include
-from .views import index, ajax_create_finance, ajax_delete_finance
-from . import ajax_datatable
+from django.urls import include, path
 
+from . import ajax_datatable
+from .views import ajax_create_finance, ajax_delete_finance, index
 
 app_name = "finance"
 
