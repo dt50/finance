@@ -27,6 +27,13 @@ class PermissionAjaxDatatableView(AjaxDatatableView):
         {"name": "currency", "visible": True},
         {"name": "date_buy", "visible": True},
         {"name": "timestamp", "visible": True},
+        {
+            "name": "delete",
+            "title": "Delete",
+            "placeholder": True,
+            "searchable": False,
+            "orderable": False,
+        },
     ]
 
     def get_initial_queryset(self, request=None):
@@ -34,3 +41,29 @@ class PermissionAjaxDatatableView(AjaxDatatableView):
             "-timestamp"
         )
         return queryset
+
+    def customize_row(self, row, obj):
+        row[
+            "delete"
+        ] = """
+            <a href="#" class="btn btn-info btn-edit"
+               onclick="
+               const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+               var id=this.closest('tr').id.substr(4);
+                $.ajax({
+                    type: 'POST',
+                    url :  `/orders/ajax_delete_order/${id}`,
+                    headers: {'X-CSRFToken': csrftoken},
+                    success : function(response){
+                        $.fn.dataTable.tables({
+                            api: true
+                        }).draw();
+                    },
+                    error : function(response){
+                        console.log(response)
+                    }
+                });
+            ">
+               Delete
+            </a>
+        """

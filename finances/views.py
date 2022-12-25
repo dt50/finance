@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from users.models import CustomUser
 from django.contrib.auth.decorators import login_required
-from finances.models import Wallet
+from finances.models import Wallet, Finance
 from .forms import FinanceForm
 from django_ajax.decorators import ajax
 from django.http import JsonResponse
@@ -33,3 +33,9 @@ def ajax_create_finance(request):
         wallet = Wallet.objects.filter(customuser__user=request.user)[0]
         wallet.finance.add(finance)
         return JsonResponse({"state": "OK"})
+
+
+@ajax
+def ajax_delete_finance(request, id):
+    finance = Finance.objects.get(id=id)
+    finance.delete()
