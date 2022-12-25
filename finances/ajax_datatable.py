@@ -1,4 +1,5 @@
 from ajax_datatable.views import AjaxDatatableView
+
 from .models import Finance
 
 

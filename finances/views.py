@@ -1,10 +1,12 @@
-from django.shortcuts import render
-from users.models import CustomUser
 from django.contrib.auth.decorators import login_required
-from finances.models import Wallet, Finance
-from .forms import FinanceForm
-from django_ajax.decorators import ajax
 from django.http import JsonResponse
+from django.shortcuts import render
+from django_ajax.decorators import ajax
+
+from finances.models import Finance, Wallet
+from users.models import CustomUser
+
+from .forms import FinanceForm
 
 
 def is_ajax(request):

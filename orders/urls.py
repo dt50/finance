@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import index, ajax_create_order, ajax_delete_order
-from . import ajax_datatable
 
+from . import ajax_datatable
+from .views import ajax_create_order, ajax_delete_order, index
 
 app_name = "orders"
 
@@ -18,5 +18,6 @@ urlpatterns = [
         name="index",
     ),
     path("create_order/", ajax_create_order, name="create_order"),
-    path("ajax_delete_order/<int:id>", ajax_delete_order, name="ajax_delete_order"),
+    path("ajax_delete_order/<int:id>",
+         ajax_delete_order, name="ajax_delete_order"),
 ]
