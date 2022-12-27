@@ -16,20 +16,21 @@ def index(request):
     form = OrderForm()
     return render(
         request,
-        "orders/table.html",
+        "orders/table_order.html",
         {"url_photo": photo.avatar.url, "form": form},
     )
 
 
 @ajax
-def ajax_create_order(request):
+def ajax_create_order_view(request):
     if request.method == "POST" and is_ajax(request):
         form = OrderForm(request.POST)
         order = form.save(commit=False)
         order.save()
+
+        user = CustomUser.objects.get(user=request.user)
+        user.orders.add(order)
         if order.state == "2":
-            user = CustomUser.objects.get(user=request.user)
-            user.orders.add(order)
             waste = TypeFinance.objects.get(name="Покупки")
             finance = Finance(
                 name=order.name,

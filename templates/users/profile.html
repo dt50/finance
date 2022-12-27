@@ -46,8 +46,12 @@
                   </div>
                   <div class="dropdown-options">
                     {% for order in info.orders.all %}
-                        {% if order.state != '2' %}
+                        {% if order.state == '1' %}
+                            <button type="button" data-bs-toggle="modal" data-bs-target="#OrderModal" data-bs-id="{{ order.id }}" data-bs-name="{{ order.name }}" style="background: #a7e245">{{ order.name }} - {{ order.price }} {% if order.currency == '1' %}<i class="fa fa-rub"></i>{% elif order.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</button>
+                        {% elif order.state == '3' %}
                             <button type="button" data-bs-toggle="modal" data-bs-target="#OrderModal" data-bs-id="{{ order.id }}" data-bs-name="{{ order.name }}">{{ order.name }} - {{ order.price }} {% if order.currency == '1' %}<i class="fa fa-rub"></i>{% elif order.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</button>
+                        {% elif order.state == '4' %}
+                            <s><button type="button" data-bs-toggle="modal" data-bs-target="#OrderModal" data-bs-id="{{ order.id }}" data-bs-name="{{ order.name }}">{{ order.name }} - {{ order.price }} {% if order.currency == '1' %}<i class="fa fa-rub"></i>{% elif order.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</button></s>
                         {% endif %}
                     {% endfor %}
                   </div>
@@ -173,7 +177,7 @@
               if (id) {
                   $.ajax({
                       type: "GET",
-                      url: "{% url 'users:ajax_order' %}",
+                      url: "{% url 'orders:ajax_order' %}",
                       data: {'id': id},
                       success: function (data, status) {
                           data = data[0].fields
@@ -202,9 +206,10 @@
               if (id) {
                   $.ajax({
                       type: "GET",
-                      url: "{% url 'users:ajax_wishlist' %}",
+                      url: "{% url 'orders:ajax_wishlist' %}",
                       data: {'id': id},
                       success: function (data, status) {
+                          console.log(data);
                           data = data[0].fields
                           $('#WishlistModal').find('#id_wish_').val(id);
                           $('#WishlistModal').find('#id_state').val(data.state);
@@ -233,7 +238,7 @@
                 var serializedData = $(this).serialize();
                 $.ajax({
                     type: 'POST',
-                    url: `/users/ajax_update_order/${id}`,
+                    url: `/orders/ajax_update_order/${id}`,
                     headers: {"X-CSRFToken": crf_token},
                     data: serializedData,
                     success: function (response, date) {
@@ -247,7 +252,7 @@
                 var serializedData = $(this).serialize();
                 $.ajax({
                     type: 'POST',
-                    url: `/users/ajax_create_order/`,
+                    url: `/orders/ajax_create_order/`,
                     headers: {"X-CSRFToken": crf_token},
                     data: serializedData,
                     success: function (response, date) {
@@ -273,7 +278,7 @@
                 var serializedData = $(this).serialize();
                 $.ajax({
                     type: 'POST',
-                    url: `/users/ajax_update_wish/${id}`,
+                    url: `/orders/ajax_update_wish/${id}`,
                     headers: {"X-CSRFToken": crf_token},
                     data: serializedData,
                     success: function (response, date) {
@@ -287,7 +292,7 @@
                 var serializedData = $(this).serialize();
                 $.ajax({
                     type: 'POST',
-                    url: `/users/ajax_create_wish/`,
+                    url: `/orders/ajax_create_wish/`,
                     headers: {"X-CSRFToken": crf_token},
                     data: serializedData,
                     success: function (response, date) {

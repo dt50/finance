@@ -19,15 +19,15 @@
         </table>
     </div>
 
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#FinanceModal">Add order</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#OrderModal">Add order</button>
 
 </div>
 
-    <div class="modal fade" id="FinanceModal" tabindex="-1" aria-labelledby="FinanceModalLabel" aria-hidden="true">
+    <div class="modal fade" id="OrderModal" tabindex="-1" aria-labelledby="OrderModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">New finances</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">New Order</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -65,6 +65,7 @@
           </div>
         </div>
       </div>
+    </div>
 {% endblock %}
 
 
@@ -92,12 +93,12 @@
 
         });
 
-        const FinanceModal = document.getElementById('FinanceModal')
-        FinanceModal.addEventListener('show.bs.modal', event => {
+        const OrderModal = document.getElementById('OrderModal')
+        OrderModal.addEventListener('show.bs.modal', event => {
           const button = event.relatedTarget
-          const modalTitle = FinanceModal.querySelector('.modal-title')
-          const modalBodyInput = FinanceModal.querySelector('.modal-body input')
-          modalTitle.textContent = 'Add new finance info'
+          const modalTitle = OrderModal.querySelector('.modal-title')
+          const modalBodyInput = OrderModal.querySelector('.modal-body input')
+          modalTitle.textContent = 'Add new order info'
         });
 
         $(".contactForm").submit(function(e){
@@ -135,11 +136,14 @@
                 try {
                     var row = $(item);
                     text = row.children('td.state').first().text();
-                    console.log(text);
 
                     url = row.children('td.url').first()
 
-                    url.html(`<a href='${url.text()}'>${row.children('td.name').first().text()}</a>`)
+                    if (url.text() != '') {
+                        url.html(`<a href='${url.text()}'>${row.children('td.name').first().text()}</a>`)
+                    } else {
+                        url.html('–')
+                    }
 
                     if (text == 'Куплено') {
                         row.css('background-color', '#7fde77');

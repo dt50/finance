@@ -67,3 +67,4 @@ class PermissionAjaxDatatableView(AjaxDatatableView):
                Delete
             </a>
         """
+        row["timestamp"] = f"{obj.timestamp.date()}"

@@ -1,0 +1,52 @@
+<tr class="details">
+	<td class="details" colspan="9">
+		<div class="row-details-wrapper" data-parent-row-id="{{ object.id }}">
+			<table class="row-details">
+				<tbody>
+					<tr>
+						<td>id</td>
+						<td>{{ object.id }}</td>
+					</tr>
+					<tr>
+						<td>state</td>
+						<td>{{ object.state }}</td>
+					</tr>
+					<tr>
+						<td>name</td>
+						<td>{{ object.name }}</td>
+					</tr>
+					<tr>
+						<td>url</td>
+                        <td>
+                            {% if object.url == None %}
+                                <tr></tr>
+                            {% else %}
+                                <a href="{{ object.url }}">{{ object.url }}</a>
+                            {% endif %}
+                        </td>
+					</tr>
+					<tr>
+						<td>price</td>
+						<td>{{ object.price }}</td>
+					</tr>
+					<tr>
+						<td>currency</td>
+						<td>{{ object.get_currency_display }}</td>
+					</tr>
+					<tr>
+						<td>date_buy</td>
+                        {% if object.date_buy == None %}
+                            <td></td>
+                        {% else %}
+						    <td>{{ object.date_buy }}</td>
+                        {% endif %}
+					</tr>
+					<tr>
+						<td>timestamp</td>
+						<td>{{ object.timestamp }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</td>
+</tr>
