@@ -96,6 +96,10 @@
                     {{ order_form.name }}
                 </div>
                 <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Name:</label><br>
+                    {{ order_form.comment }}
+                </div>
+                <div class="mb-3">
                     <label for="message-text" class="col-form-label">Url:</label><br>
                     {{ order_form.url }}
                 </div>
@@ -184,6 +188,7 @@
                           $('#OrderModal').find('#id_order_').val(id);
                           $('#OrderModal').find('#id_state').val(data.state);
                           $('#OrderModal').find('#id_name').val(data.name);
+                          $('#OrderModal').find('#id_comment').val(data.comment);
                           $('#OrderModal').find('#id_url').val(data.url);
                           $('#OrderModal').find('#id_price').val(data.price);
                           $('#OrderModal').find('#id_currency').val(data.currency);

@@ -1,5 +1,6 @@
 from ajax_datatable.views import AjaxDatatableView
 from .models import Finance
+from orders.funcs.get_currency import get_currency
 
 
 class PermissionAjaxDatatableView(AjaxDatatableView):
@@ -21,6 +22,8 @@ class PermissionAjaxDatatableView(AjaxDatatableView):
         {
             "name": "currency",
             "visible": True,
+            "choices": True,
+            "autofilter": True,
         },
         {
             "name": "timestamp",
@@ -29,8 +32,17 @@ class PermissionAjaxDatatableView(AjaxDatatableView):
         {
             "name": "type",
             "visible": True,
+            "foreign_field": "type__name",
+            "choices": True,
+            "autofilter": True,
         },
-        {"name": "type_inout", "visible": True, "className": "type_inout"},
+        {
+            "name": "type_inout",
+            "visible": True,
+            "className": "type_inout",
+            "choices": True,
+            "autofilter": True,
+        },
         {
             "name": "delete",
             "title": "Delete",
@@ -71,3 +83,15 @@ class PermissionAjaxDatatableView(AjaxDatatableView):
                Delete
             </a>
         """
+
+    def footer_message(self, qs, params):
+        currency = get_currency()
+        total_money = 0
+        for finance in qs:
+            if finance.currency == "2":
+                total_money += finance.budget * float(currency["USD"]["Value"])
+            elif finance.currency == "3":
+                total_money += finance.budget * float(currency["EUR"]["Value"])
+            else:
+                total_money += finance.budget
+        return f"Current balance is {total_money}"

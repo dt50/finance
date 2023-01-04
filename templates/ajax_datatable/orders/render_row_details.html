@@ -15,12 +15,18 @@
 						<td>name</td>
 						<td>{{ object.name }}</td>
 					</tr>
+                    <tr>
+						<td>comment</td>
+						<td>
+                            {% if object.comment != None %}
+                                {{ object.comment }}
+                            {% endif %}
+                        </td>
+					</tr>
 					<tr>
 						<td>url</td>
                         <td>
-                            {% if object.url == None %}
-                                <tr></tr>
-                            {% else %}
+                            {% if object.url != None %}
                                 <a href="{{ object.url }}">{{ object.url }}</a>
                             {% endif %}
                         </td>
@@ -35,11 +41,11 @@
 					</tr>
 					<tr>
 						<td>date_buy</td>
-                        {% if object.date_buy == None %}
-                            <td></td>
-                        {% else %}
-						    <td>{{ object.date_buy }}</td>
+                        <td>
+                        {% if object.date_buy != None %}
+						    {{ object.date_buy }}
                         {% endif %}
+                        </td>
 					</tr>
 					<tr>
 						<td>timestamp</td>

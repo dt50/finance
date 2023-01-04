@@ -20,7 +20,8 @@
     </div>
 
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#FinanceModal">Add finance</button>
-
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#DiffFinance">Difference budget</button>
+    {% csrf_token %}
 </div>
 
     <div class="modal fade" id="FinanceModal" tabindex="-1" aria-labelledby="FinanceModalLabel" aria-hidden="true">
@@ -31,8 +32,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form class="contactForm">
-              {% csrf_token %}
+            <form class="contactFormFinance">
               <div class="mb-3">
                 <label for="recipient-name" class="col-form-label">Name:</label><br>
                 {{ form.name }}
@@ -57,6 +57,31 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="modal fade" id="DiffFinance" tabindex="-1" aria-labelledby="DiffFinanceLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Different budget</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form class="contactFormDiff">
+                <input id="id_order_" type="hidden">
+                <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Current budget:</label><br>
+                    <input type="number" id="id_curr_budget" name="diff_budget">
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary submit" data-bs-dismiss="modal">Create</button>
+          </div>
+        </div>
+      </div>
+    </div>
 {% endblock %}
 
 
@@ -92,18 +117,52 @@
           modalTitle.textContent = 'Add new finance info'
         });
 
-
-        const button = document.querySelector(".submit");
-        button.addEventListener("click", () => {
-            $(".contactForm").submit()
+        const DiffFinance = document.getElementById('DiffFinance')
+        DiffFinance.addEventListener('show.bs.modal', event => {
+          const button = event.relatedTarget
+          const modalTitle = DiffFinance.querySelector('.modal-title')
+          const modalBodyInput = DiffFinance.querySelector('.modal-body input')
+          modalTitle.textContent = 'Difference budget'
         });
 
-        $(".contactForm").submit(function(e){
+
+        $('#FinanceModal').find('.submit').on('click', () => {
+            $(".contactFormFinance").submit()
+        });
+
+        $(".contactFormFinance").submit(function(e){
             e.preventDefault();
+            var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
             var serializedData = $(this).serialize();
             $.ajax({
                 type: 'POST',
                 url :  "{% url 'finance:append_finance' %}",
+                headers: {"X-CSRFToken": crf_token},
+                data : serializedData,
+                success : function(response){
+                    $.fn.dataTable.tables({
+                        api: true
+                    }).draw();
+                },
+                error : function(response){
+                    console.log(response)
+                }
+            });
+        });
+
+
+        $('#DiffFinance').find('.submit').on('click', () => {
+            $(".contactFormDiff").submit()
+        });
+
+        $(".contactFormDiff").submit(function(e){
+            e.preventDefault();
+            var crf_token = $('[name="csrfmiddlewaretoken"]').attr('value');
+            var serializedData = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url :  "{% url 'finance:ajax_diff_budget' %}",
+                headers: {"X-CSRFToken": crf_token},
                 data : serializedData,
                 success : function(response){
                     $.fn.dataTable.tables({

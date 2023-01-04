@@ -18,12 +18,19 @@ class Orders(models.Model):
     )
 
     name = models.CharField(max_length=500)
+
+    comment = models.TextField(blank=True, null=True)
+
     url = models.URLField(blank=True, null=True)
+
     price = models.FloatField()
+
     currency = models.CharField(
         max_length=2, choices=Currency.choices, default=Currency.RU
     )
+
     date_buy = models.DateField(blank=True, null=True)
+
     timestamp = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -47,11 +54,17 @@ class Wishlist(models.Model):
     state = models.CharField(max_length=2, choices=State.choices, default=State.PLAN)
 
     name = models.CharField(max_length=500)
+
+    comment = models.TextField(blank=True, null=True)
+
     url = models.URLField(blank=True, null=True)
+
     price = models.FloatField()
+
     currency = models.CharField(
         max_length=2, choices=Currency.choices, default=Currency.RU
     )
+
     timestamp = models.DateTimeField(auto_now=True)
 
     class Meta:

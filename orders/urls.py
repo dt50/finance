@@ -17,8 +17,13 @@ app_name = "orders"
 urlpatterns = [
     path(
         "ajax_datatable/permissions/",
-        ajax_datatable.PermissionAjaxDatatableView.as_view(),
+        ajax_datatable.OrdersDatatableView.as_view(),
         name="ajax_datatable_permissions",
+    ),
+    path(
+        "ajax_datatable/wishlist/",
+        ajax_datatable.WishlistDatatableView.as_view(),
+        name="ajax_datatable_wishlist",
     ),
     path(
         "table/",
