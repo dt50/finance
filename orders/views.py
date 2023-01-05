@@ -11,12 +11,22 @@ def is_ajax(request):
     return request.headers.get("x-requested-with") == "XMLHttpRequest"
 
 
-def index(request):
+def table_order(request):
     photo = CustomUser.objects.get(user=request.user)
     form = OrderForm()
     return render(
         request,
         "orders/table_order.html",
+        {"url_photo": photo.avatar.url, "form": form},
+    )
+
+
+def table_wishlist(request):
+    photo = CustomUser.objects.get(user=request.user)
+    form = OrderForm()
+    return render(
+        request,
+        "orders/table_wishlist.html",
         {"url_photo": photo.avatar.url, "form": form},
     )
 

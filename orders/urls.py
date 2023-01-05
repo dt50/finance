@@ -1,5 +1,10 @@
 from django.urls import path
-from .views import index, ajax_create_order_view, ajax_delete_order
+from .views import (
+    table_order,
+    ajax_create_order_view,
+    ajax_delete_order,
+    table_wishlist,
+)
 from . import ajax_datatable
 from .ajax import (
     ajax_get_order,
@@ -27,8 +32,13 @@ urlpatterns = [
     ),
     path(
         "table/",
-        index,
+        table_order,
         name="index",
+    ),
+    path(
+        "table_wish/",
+        table_wishlist,
+        name="table_wishlist",
     ),
     path("create_order/", ajax_create_order_view, name="create_order"),
     path("ajax_delete_order/<int:id>", ajax_delete_order, name="ajax_delete_order"),

@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block style %}
+    <link href="{% static 'ajax_datatable/css/style.css' %}" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="{% static 'finance/table.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block img %}
+    {{ url_photo }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="table-responsive _table">
+        <table id="datatable" class="table table-bordered table-hover table-striped">
+        </table>
+    </div>
+{% endblock %}
+
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'ajax_datatable/js/utils.js' %}"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+    <script>
+
+        $(document).ready(function() {
+            AjaxDatatableViewUtils.initialize_table(
+                $('#datatable'),
+                "{% url 'orders:ajax_datatable_wishlist' %}",
+                {
+                    // extra_options (example)
+                    processing: false,
+                    autoWidth: true,
+                    full_row_select: true,
+                    scrollX: false,
+                }, {
+                    // extra_data
+                    // ...
+                },
+            );
+
+        });
+
+        $('#datatable').on('draw.dt', function(event) {
+            onTableDraw(event);
+        });
+
+        var onTableDraw = function (event) {
+            var html_table = $(event.target);
+            html_table.find('tr').each(function(index, item) {
+
+                try {
+                    var row = $(item);
+                    text = row.children('td.state').first().text();
+
+                    url = row.children('td.url').first()
+
+                    if (text == 'В планых') {
+                        row.css('background-color', '#7fde77');
+                    }
+                    else if (text == 'Заброшено') {
+                        row.css('background-color', '#ffa4a4');
+                    }
+                }
+                    catch(err) {
+                }
+
+            });
+        }
+
+    </script>
+
+{% endblock %}

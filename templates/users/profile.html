@@ -47,11 +47,15 @@
                   <div class="dropdown-options">
                     {% for order in info.orders.all %}
                         {% if order.state == '1' %}
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#OrderModal" data-bs-id="{{ order.id }}" data-bs-name="{{ order.name }}" style="background: #a7e245">{{ order.name }} - {{ order.price }} {% if order.currency == '1' %}<i class="fa fa-rub"></i>{% elif order.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</button>
+                            <button type="button" style="background: #7fde77" data-bs-toggle="modal" data-bs-target="#OrderModal" data-bs-id="{{ order.id }}" data-bs-name="{{ order.name }}" style="background: #a7e245">{{ order.name }} - {{ order.price }} {% if order.currency == '1' %}<i class="fa fa-rub"></i>{% elif order.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</button>
                         {% elif order.state == '3' %}
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#OrderModal" data-bs-id="{{ order.id }}" data-bs-name="{{ order.name }}">{{ order.name }} - {{ order.price }} {% if order.currency == '1' %}<i class="fa fa-rub"></i>{% elif order.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</button>
+                            <button type="button" style="background: #ffc3fb" data-bs-toggle="modal" data-bs-target="#OrderModal" data-bs-id="{{ order.id }}" data-bs-name="{{ order.name }}">{{ order.name }} - {{ order.price }} {% if order.currency == '1' %}<i class="fa fa-rub"></i>{% elif order.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</button>
                         {% elif order.state == '4' %}
-                            <s><button type="button" data-bs-toggle="modal" data-bs-target="#OrderModal" data-bs-id="{{ order.id }}" data-bs-name="{{ order.name }}">{{ order.name }} - {{ order.price }} {% if order.currency == '1' %}<i class="fa fa-rub"></i>{% elif order.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</button></s>
+                            <s><button type="button" style="background: #f3b353" data-bs-toggle="modal" data-bs-target="#OrderModal" data-bs-id="{{ order.id }}" data-bs-name="{{ order.name }}">{{ order.name }} - {{ order.price }} {% if order.currency == '1' %}<i class="fa fa-rub"></i>{% elif order.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</button></s>
+                        {% elif order.state == '5' %}
+                            <s><button type="button" style="background: #ffa4a4" data-bs-toggle="modal" data-bs-target="#OrderModal" data-bs-id="{{ order.id }}" data-bs-name="{{ order.name }}">{{ order.name }} - {{ order.price }} {% if order.currency == '1' %}<i class="fa fa-rub"></i>{% elif order.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</button></s>
+                        {% elif order.state == '6' %}
+                            <button type="button" style="background: #53eef3" data-bs-toggle="modal" data-bs-target="#OrderModal" data-bs-id="{{ order.id }}" data-bs-name="{{ order.name }}">{{ order.name }} - {{ order.price }} {% if order.currency == '1' %}<i class="fa fa-rub"></i>{% elif order.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</button>
                         {% endif %}
                     {% endfor %}
                   </div>
@@ -68,7 +72,11 @@
                     </div>
                     <div class="dropdown-options">
                         {% for wishlist in info.wishlists.all %}
-                            <button type="button" data-bs-toggle="modal" data-bs-target="#WishlistModal" data-bs-id="{{ wishlist.id }}" data-bs-name="{{ wishlist.name }}">{{ wishlist.name }} - {{ wishlist.price }} {% if wishlist.currency == '1' %}<i class="fa fa-rub"></i>{% elif wishlist.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</button>
+                            {% if wishlist.state == '1' %}
+                                <button type="button" style="background: #7fde77" data-bs-toggle="modal" data-bs-target="#WishlistModal" data-bs-id="{{ wishlist.id }}" data-bs-name="{{ wishlist.name }}">{{ wishlist.name }} - {{ wishlist.price }} {% if wishlist.currency == '1' %}<i class="fa fa-rub"></i>{% elif wishlist.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</button>
+                            {% elif wishlist.state == '2' %}
+                                <s><button type="button" style="background: #ffa4a4" data-bs-toggle="modal" data-bs-target="#WishlistModal" data-bs-id="{{ wishlist.id }}" data-bs-name="{{ wishlist.name }}">{{ wishlist.name }} - {{ wishlist.price }} {% if wishlist.currency == '1' %}<i class="fa fa-rub"></i>{% elif wishlist.currency == '2' %}<i class="fa fa-usd"></i>{% else %}<i class="fa fa-eur"></i>{% endif %}</button></s>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>
@@ -119,7 +127,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary submit" data-bs-dismiss="modal">Create</button>
+            <button type="button" class="btn btn-primary submit" data-bs-dismiss="modal">Update</button>
           </div>
         </div>
       </div>
@@ -159,7 +167,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary submit" data-bs-dismiss="modal">Create</button>
+            <button type="button" class="btn btn-primary submit" data-bs-dismiss="modal">Update</button>
           </div>
         </div>
       </div>

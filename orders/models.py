@@ -6,7 +6,9 @@ class Orders(models.Model):
         TO_BUY = "1", "К покупке"
         BOUGHT = "2", "Куплено"
         SCHEDULED = "3", "Запланировано"
-        ABADONED = "4", "Заброшено"
+        SCHEDULED_NOT_INCLUDED = "4", "Запланировано (не учитывать в подборе)"
+        ABADONED = "5", "Заброшено"
+        THINKED = "6", "Обдумывается"
 
     class Currency(models.TextChoices):
         RU = "1", "Рубль"
