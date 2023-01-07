@@ -58,6 +58,19 @@ def ajax_update_wish(request, id):
         instance = Wishlist.objects.get(id=id)
         form = WishlistForm(request.POST, instance=instance)
         form.save()
+        if instance.state == "3":
+            user = CustomUser.objects.get(user=request.user)
+            instance = Wishlist.objects.get(id=id)
+            order = Orders(
+                state="3",
+                name=instance.name,
+                comment=instance.comment,
+                url=instance.url,
+                price=instance.price,
+                currency=instance.currency,
+            )
+            order.save()
+            user.orders.add(order)
         return JsonResponse({"state": "OK"}, status=200)
 
 

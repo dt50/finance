@@ -7,6 +7,8 @@ class OrdersDatatableView(AjaxDatatableView):
     title = "Orders"
     initial_order = [
         ["state", "desc"],
+        ["date_buy", "desc"],
+        ["price", "desc"],
     ]
     length_menu = [[10, 20, 50, 100, -1], [10, 20, 50, 100, "all"]]
     search_values_separator = ""

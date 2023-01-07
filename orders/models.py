@@ -47,6 +47,7 @@ class Wishlist(models.Model):
     class State(models.TextChoices):
         PLAN = "1", "В планых"
         ABADONED = "2", "Заброшено"
+        TO_ORDER = "3", "В закупку"
 
     class Currency(models.TextChoices):
         RU = "1", "Рубль"

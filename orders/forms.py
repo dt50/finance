@@ -11,4 +11,4 @@ class OrderForm(forms.ModelForm):
 class WishlistForm(forms.ModelForm):
     class Meta:
         model = Wishlist
-        fields = ["state", "name", "url", "price", "currency"]
+        fields = ["state", "name", "comment", "url", "price", "currency"]

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
+import requests
 from .forms import SignUpForm
 from .models import CustomUser
 from finances.models import Finance
@@ -48,7 +49,11 @@ def profile(request):
     order_form = OrderForm()
     wishlist_form = WishlistForm()
     total_money = 0
-    currency = get_currency()
+    try:
+        currency = get_currency()
+    except requests.ConnectionError:
+        currency["USD"]["Value"] = 70
+        currency["EUR"]["Value"] = 80
     for finance in finances:
         if finance.currency == "2":
             total_money += finance.budget * float(currency["USD"]["Value"])
@@ -58,7 +63,7 @@ def profile(request):
             total_money += finance.budget
 
     total_money_order = 0
-    for order in user_finance.orders.filter(~Q(state__in=["2", "4"])):
+    for order in user_finance.orders.filter(~Q(state__in=["2", "4", "5", "6"])):
         if order.currency == "2":
             total_money_order += order.price * float(currency["USD"]["Value"])
         elif order.currency == "3":
